@@ -12,7 +12,7 @@ exports.handler = async (event) => {
 
 // Function to automatically update Lambda function from S3
 exports.updateLambdaFromS3 = async () => {
-    const bucketName = 'node-project'; // Your S3 bucket name
+    const bucketName = 'node-code-bucket'; // Your S3 bucket name
     const objectKey = 'lambda-deploy.zip'; // Your zip file name
 
     // Fetch the zip file from S3
