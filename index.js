@@ -6,7 +6,7 @@ exports.handler = async (event) => {
     // Your existing code
     return {
         statusCode: 200,
-        body: JSON.stringify({ message: 'This site is running good' }),
+        body: JSON.stringify({ message: 'This site is running' }),
     };
 };
 
