@@ -1,6 +1,36 @@
+const AWS = require('aws-sdk');
+const S3 = new AWS.S3();
+const Lambda = new AWS.Lambda();
+
 exports.handler = async (event) => {
-    return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'This site is running fine' }),
+    const bucketName = 'node-project'; // Your S3 bucket name
+    const objectKey = 'lambda-deploy.zip'; // Your zip file name
+
+    // Fetch the zip file from S3
+    const params = {
+        Bucket: bucketName,
+        Key: objectKey
     };
+    try {
+        const code = await S3.getObject(params).promise();
+
+        // Update Lambda Function with the binary content of the zip file
+        const updateParams = {
+            FunctionName: 'node-code-deploy', // Your Lambda function name
+            ZipFile: code.Body // Binary content of the zip file
+        };
+        await Lambda.updateFunctionCode(updateParams).promise();
+
+        console.log('Lambda function updated successfully');
+        return {
+            statusCode: 200,
+            body: JSON.stringify('Lambda function updated successfully'),
+        };
+    } catch (error) {
+        console.error('Error updating Lambda function:', error);
+        return {
+            statusCode: 500,
+            body: JSON.stringify('Error updating Lambda function'),
+        };
+    }
 };
